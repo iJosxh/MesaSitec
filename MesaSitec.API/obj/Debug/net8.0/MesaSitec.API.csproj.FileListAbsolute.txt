@@ -138,3 +138,11 @@ C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\runtimes\win-arm64\nativ
 C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\Josue\MesaSitec\MesaSitec.API\obj\Debug\net8.0\MesaSitec.API.sourcelink.json
+C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Josue\MesaSitec\MesaSitec.API\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
