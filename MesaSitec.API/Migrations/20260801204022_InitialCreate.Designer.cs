@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MesaSitec.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260801044942_InitialCreate")]
+    [Migration("20260801204022_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

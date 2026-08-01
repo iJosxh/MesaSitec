@@ -12,11 +12,18 @@ public static class SeedData
             return;
 
         var tenants = SeedTenants(context);
+        var fechaBase = GetSeedBaseDate();
 
         SeedUsuarios(context, tenants);
-
         SeedCategorias(context, tenants);
 
+        // Guardar primero tenants, usuarios y categorías
+        context.SaveChanges();
+
+        // Ahora sí existen en la BD
+        SeedSolicitudes(context, fechaBase);
+
+        // Guardar las solicitudes
         context.SaveChanges();
     }
 
@@ -100,5 +107,190 @@ public static class SeedData
             CrearCategoria("Consulta", 24, tenant);
             CrearCategoria("Falla crítica", 4, tenant);
         }
+    }
+
+    private static void SeedSolicitudes(
+    ApplicationDbContext context,
+    DateTime fechaBase)
+    {
+        if (context.Solicitudes.Any())
+            return;
+
+        var tenantNorte = context.Tenants
+            .First(t => t.Nombre == "Cooperativa Norte");
+
+        var tenantSur = context.Tenants
+            .First(t => t.Nombre == "Bufete Sur");
+
+        var categoriasNorte = context.Categorias
+            .Where(c => c.TenantId == tenantNorte.Id)
+            .ToList();
+
+        var categoriasSur = context.Categorias
+            .Where(c => c.TenantId == tenantSur.Id)
+            .ToList();
+
+        var solicitantesNorte = context.Usuarios
+            .Where(u => u.TenantId == tenantNorte.Id &&
+                        u.Rol == Rol.Solicitante)
+            .ToList();
+
+        var solicitantesSur = context.Usuarios
+            .Where(u => u.TenantId == tenantSur.Id &&
+                        u.Rol == Rol.Solicitante)
+            .ToList();
+
+        var agentesNorte = context.Usuarios
+            .Where(u => u.TenantId == tenantNorte.Id &&
+                        u.Rol == Rol.Agente)
+            .ToList();
+
+        var estados = new[]
+        {
+            EstadoSolicitud.Nueva,
+            EstadoSolicitud.Asignada,
+            EstadoSolicitud.EnProceso,
+            EstadoSolicitud.Resuelta,
+            EstadoSolicitud.Cerrada,
+            EstadoSolicitud.Cancelada
+        };
+
+        var prioridades = new[]
+        {
+            Prioridad.Baja,
+            Prioridad.Media,
+            Prioridad.Alta,
+            Prioridad.Critica
+        };
+
+        // -------------------------
+        // Cooperativa Norte (25)
+        // -------------------------
+
+        for (int i = 1; i <= 25; i++)
+        {
+            var estado = estados[(i - 1) % estados.Length];
+            var prioridad = prioridades[(i - 1) % prioridades.Length];
+
+            CrearSolicitud(
+                context,
+                tenantNorte,
+                solicitantesNorte[(i - 1) % solicitantesNorte.Count],
+                estado == EstadoSolicitud.Nueva
+                    ? null
+                    : agentesNorte[(i - 1) % agentesNorte.Count],
+                categoriasNorte[(i - 1) % categoriasNorte.Count],
+                i,
+                estado,
+                prioridad,
+                fechaBase);
+        }
+
+        // -------------------------
+        // Bufete Sur (8)
+        // -------------------------
+
+        for (int i = 26; i <= 33; i++)
+        {
+            var estado = estados[(i - 1) % estados.Length];
+            var prioridad = prioridades[(i - 1) % prioridades.Length];
+
+            CrearSolicitud(
+                context,
+                tenantSur,
+                solicitantesSur[(i - 26) % solicitantesSur.Count],
+                null,
+                categoriasSur[(i - 26) % categoriasSur.Count],
+                i,
+                estado,
+                prioridad,
+                fechaBase);
+        }
+    }
+
+    private static void CrearSolicitud(
+    ApplicationDbContext context,
+    Tenant tenant,
+    Usuario solicitante,
+    Usuario? agente,
+    Categoria categoria,
+    int numero,
+    EstadoSolicitud estado,
+    Prioridad prioridad,
+    DateTime fechaBase)
+    {
+        // Todas las fechas se calculan respecto a SEED_FECHA_BASE
+        var fechaCreacion = fechaBase.AddDays(-numero);
+
+        var horasSla = categoria.SlaHoras;
+
+        var fechaLimite = fechaCreacion.AddHours(horasSla);
+
+        // Las primeras 5 solicitudes quedan vencidas
+        if (numero <= 5)
+        {
+            fechaLimite = fechaBase.AddDays(-1);
+        }
+
+        DateTime? fechaResolucion = null;
+
+        // Las solicitudes resueltas y cerradas tienen fecha de resolución
+        if (estado == EstadoSolicitud.Resuelta ||
+            estado == EstadoSolicitud.Cerrada)
+        {
+            fechaResolucion = fechaCreacion.AddHours(horasSla / 2);
+        }
+
+        context.Solicitudes.Add(new Solicitud
+        {
+            Id = Guid.NewGuid(),
+
+            TenantId = tenant.Id,
+
+            Codigo = $"SOL-2026-{numero:00000}",
+
+            Titulo = $"Solicitud #{numero}",
+
+            Descripcion = $"Solicitud generada automáticamente #{numero}",
+
+            CategoriaId = categoria.Id,
+
+            Prioridad = prioridad,
+
+            Estado = estado,
+
+            SolicitanteId = solicitante.Id,
+
+            AgenteId = agente?.Id,
+
+            FechaCreacion = fechaCreacion,
+
+            FechaLimiteSla = fechaLimite,
+
+            FechaResolucion = fechaResolucion,
+
+            Tenant = tenant,
+
+            Categoria = categoria,
+
+            Solicitante = solicitante,
+
+            Agente = agente
+        });
+    }
+
+    private static DateTime GetSeedBaseDate()
+    {
+        var value = Environment.GetEnvironmentVariable("SEED_FECHA_BASE");
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            value = "2026-01-15T08:00:00Z";
+        }
+
+        return DateTime.Parse(
+            value,
+            null,
+            System.Globalization.DateTimeStyles.AdjustToUniversal);
     }
 }
