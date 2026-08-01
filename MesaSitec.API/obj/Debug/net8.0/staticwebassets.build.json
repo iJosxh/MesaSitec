@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "21BDQk1JLZAY7zQbUi1d6QwoPgYogY8LvvQlVusVV4w=",
+  "Source": "MesaSitec.API",
+  "BasePath": "_content/MesaSitec.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
