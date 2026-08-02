@@ -1,5 +1,6 @@
 using MesaSitec.API.Enums;
 using MesaSitec.API.Models;
+using MesaSitec.API.Domain;
 using Microsoft.AspNetCore.Identity;
 
 namespace MesaSitec.API.Data;
@@ -222,9 +223,10 @@ public static class SeedData
         // Todas las fechas se calculan respecto a SEED_FECHA_BASE
         var fechaCreacion = fechaBase.AddDays(-numero);
 
-        var horasSla = categoria.SlaHoras;
-
-        var fechaLimite = fechaCreacion.AddHours(horasSla);
+        var fechaLimite = SlaCalculator.CalcularFechaLimite(
+        fechaCreacion,
+        categoria.SlaHoras,
+        prioridad);
 
         // Las primeras 5 solicitudes quedan vencidas
         if (numero <= 5)
@@ -238,7 +240,7 @@ public static class SeedData
         if (estado == EstadoSolicitud.Resuelta ||
             estado == EstadoSolicitud.Cerrada)
         {
-            fechaResolucion = fechaCreacion.AddHours(horasSla / 2);
+            fechaResolucion = fechaCreacion.AddHours(categoria.SlaHoras / 2.0);
         }
 
         context.Solicitudes.Add(new Solicitud
