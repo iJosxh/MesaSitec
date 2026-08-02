@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace MesaSitec.API.Controllers;
 
 [ApiController]
-[Route("me")]
+[Route("api/v1/me")]
 [Authorize]
 public class MeController : ControllerBase
 {

@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("d8cdeabf-7c97-4ed8-b22a-02fd6e08a60f")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("MesaSitec.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ad12a4e4669fd41a21ddcbcc1703390a57f391a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+46f92a93e539f968542ccff03ba48081dcabaabe")]
 [assembly: System.Reflection.AssemblyProductAttribute("MesaSitec.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MesaSitec.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

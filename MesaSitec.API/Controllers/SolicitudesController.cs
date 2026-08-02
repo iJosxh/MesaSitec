@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MesaSitec.API.Controllers;
 
 [ApiController]
-[Route("solicitudes")]
+[Route("api/v1/solicitudes")]
 [Authorize]
 public class SolicitudesController : ControllerBase
 {

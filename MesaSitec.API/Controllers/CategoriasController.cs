@@ -1,13 +1,14 @@
 using System.Security.Claims;
 using MesaSitec.API.DTOs;
 using MesaSitec.API.Services;
+using MesaSitec.API.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MesaSitec.API.Controllers;
 
 [ApiController]
-[Route("categorias")]
+[Route("api/v1/categorias")]
 [Authorize]
 public class CategoriasController : ControllerBase
 {
@@ -31,5 +32,15 @@ public class CategoriasController : ControllerBase
         var categorias = await _categoriaService.GetCategoriasAsync(tenantId);
 
         return Ok(categorias);
+    }
+
+    [HttpGet("error")]
+    public IActionResult Error()
+    {
+        throw new BusinessException(
+            409,
+            "TRANSICION_INVALIDA",
+            "Transición inválida",
+            "Esta es una prueba del manejador global.");
     }
 }
