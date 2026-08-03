@@ -1,79 +1,183 @@
 # MesaSitec
 
-## Descripción
-
-Breve descripción del proyecto.
+Sistema de gestion mesa ayuda desarrollado como parte de una prueba tecnica de desarrollo. 
+Permite la administracion de solicitudes entre usuarios para su seguimiento y resolucion.
 
 ---
 
-## Tecnologías utilizadas
+# Tecnologías utilizadas
 
-### Backend
+## Backend
 
-- .NET
-- ASP.NET Core
+- .NET 8
+- ASP.NET Core Web API
 - Entity Framework Core
 - SQL Server
-- JWT
+- JWT Authentication
+- Swagger (OpenAPI)
 
-### Frontend
+## Frontend
 
 - Vue 3
 - TypeScript
 - Vite
 - Vue Router
 - Pinia
+- Axios
 
 ---
 
-## Requisitos
+# Requisitos Previos
 
-- .NET SDK
-- Node.js
-- SQL Server
+Antes de ejecutar el proyecto asegurese de tener instalado:
 
----
-
-## Variables de entorno
-
-Explicar el uso de los archivos `.env`.
+- .NET SDK 8 o superior
+- Node.js 20 LTS
+- SQL Lite
+- Git
 
 ---
 
-## Instalación
+# Variables de entorno
 
-### Backend
-
-(comandos)
-
-### Frontend
-
-(comandos)
+Dentro del repositorio se subio un archivo `.env.example` para dar a conocer variables de entorno que se usan
+en el proyecto. Su uso es para su personalización, mas adelante se describe como se implementaran
 
 ---
 
-## Credenciales de prueba
+# Instalación
 
-Administrador
+### 1. Clonar el repositorio
 
-Agente
+```bash
+git clone https://github.com/iJosxh/MesaSitec.git
+cd MesaSitec
+```
 
-Solicitante
+### 2. Instalar las dependencias
+
+#### Backend
+
+```bash
+cd MesaSitec.API
+dotnet restore
+```
+
+#### Frontend
+
+```bash
+cd ../mesasitec-web
+npm install
+```
+
+### 3. Configurar la variable de entorno
+
+Antes de ejecutar el backend, configure la variable `JWT_SECRET` en MesaSitec.API.
+
+**PowerShell:**
+
+```powershell
+$env:JWT_SECRET="TuClaveJWT"
+```
+
+### 4. Ejecutar la aplicación
+
+#### Backend
+
+```bash
+cd ../MesaSitec.API
+dotnet run
+```
+
+#### Frontend
+
+```bash
+cd ../mesasitec-web
+npm run dev
+```
 
 ---
 
-## Funcionalidades implementadas
+# Credenciales de prueba
 
-(lista)
+## Administrador
+
+Usuario:
+
+```
+admin@norte.test
+```
+
+Contraseña:
+
+```
+Sitec.2026
+```
 
 ---
 
-## Funcionalidades pendientes
+## Agente
 
-(lista)
+Usuario:
+
+```
+agente1@norte.test
+```
+
+Contraseña:
+
+```
+Sitec.2026
+```
 
 ---
 
-## Estructura del proyecto
+## Solicitante
 
-(pequeña explicación)
+Usuario:
+
+```
+user1@norte.test
+```
+
+Contraseña:
+
+```
+Sitec.2026
+```
+
+---
+
+# Pruebas Unitarias
+
+```bash
+cd MesaSitec.API.Tests
+dotnet test
+```
+
+
+# Funcionalidades implementadas
+
+- El backend valida todas las reglas de negocio, la maquina de estados y el calculo del SLA.
+- Autenticación mediante JWT.
+- Mostrar el listado de las solicitudes.
+- Opcion para mostrar el detalle de cada solicitud.
+- Filtros de busqueda.
+- Paginacion segun el formato solicitado.
+
+---
+
+# Funcionalidades pendientes
+
+- Validar que las solicitudes semilla no se creen con el estado vencida por la variable de entorno SEED_FECHA_BASE descrita en la prueba.
+- El frontend no tiene implementado en un 100% todo las funcionalidades del backend.
+- El consumo de todas las APIs en el frontend.
+- Validaciones en las vistas como por ejemplo solo mostrar solicitudes de la organizacion del usuario logueado.
+
+---
+
+# Autor
+
+**Josué David Pú López**
+
+Prueba Técnica - MesaSitec
