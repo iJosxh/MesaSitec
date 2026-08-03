@@ -3,9 +3,11 @@ using MesaSitec.API.Helpers;
 using MesaSitec.API.Services;
 using MesaSitec.API.Handlers;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,10 +21,39 @@ if (string.IsNullOrWhiteSpace(jwtSecret))
         "La variable de entorno JWT_SECRET no está configurada.");
 }
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter());
+    });
 
-builder.Services.AddControllers();
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .ToDictionary(
+                x => char.ToLowerInvariant(x.Key[0]) + x.Key.Substring(1),
+                x => x.Value!.Errors
+                    .Select(e => e.ErrorMessage)
+                    .ToArray());
+
+        var response = new
+        {
+            type = "https://mesasitec.local/errors/validacion",
+            title = "Error de validación",
+            status = StatusCodes.Status422UnprocessableEntity,
+            detail = "Uno o más campos son inválidos.",
+            codigo = "VALIDACION",
+            errors
+        };
+
+        return new UnprocessableEntityObjectResult(response);
+    };
+});
 
 builder.Services.AddProblemDetails();
 
@@ -51,6 +82,28 @@ builder.Services
 
             NameClaimType = JwtRegisteredClaimNames.Sub,
             RoleClaimType = "rol"
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/problem+json";
+
+                var response = new
+                {
+                    type = "https://mesasitec.local/errors/no-autenticado",
+                    title = "No autenticado",
+                    status = StatusCodes.Status401Unauthorized,
+                    detail = "El token está ausente, es inválido o expiró.",
+                    codigo = "NO_AUTENTICADO"
+                };
+
+                await context.Response.WriteAsJsonAsync(response);
+            }
         };
     });
 

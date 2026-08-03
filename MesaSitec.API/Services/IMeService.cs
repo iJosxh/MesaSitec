@@ -4,5 +4,5 @@ namespace MesaSitec.API.Services;
 
 public interface IMeService
 {
-    Task<UsuarioResponse?> GetMeAsync(Guid userId);
+    Task<UsuarioResponse> GetMeAsync(Guid userId);
 }

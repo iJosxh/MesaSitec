@@ -1,5 +1,6 @@
 using MesaSitec.API.Data;
 using MesaSitec.API.DTOs;
+using MesaSitec.API.Exceptions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -14,14 +15,20 @@ public class MeService : IMeService
         _context = context;
     }
 
-    public async Task<UsuarioResponse?> GetMeAsync(Guid userId)
+    public async Task<UsuarioResponse> GetMeAsync(Guid userId)
     {
         var usuario = await _context.Usuarios
             .Include(u => u.Tenant)
             .FirstOrDefaultAsync(u => u.Id == userId);
 
         if (usuario is null)
-            return null;
+        {
+            throw new BusinessException(
+                StatusCodes.Status404NotFound,
+                "RECURSO_NO_ENCONTRADO",
+                "Recurso no encontrado",
+                "El usuario no existe.");
+        }
 
         return new UsuarioResponse
         {

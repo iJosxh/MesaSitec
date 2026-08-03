@@ -30,9 +30,6 @@ public class MeController : ControllerBase
 
         var usuario = await _meService.GetMeAsync(Guid.Parse(userId));
 
-        if (usuario is null)
-            return NotFound();
-
         return Ok(usuario);
     }
 }

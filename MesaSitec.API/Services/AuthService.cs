@@ -2,6 +2,7 @@ using MesaSitec.API.Data;
 using MesaSitec.API.DTOs;
 using MesaSitec.API.Helpers;
 using MesaSitec.API.Models;
+using MesaSitec.API.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -20,7 +21,7 @@ public class AuthService : IAuthService
         _jwt = jwt;
     }
 
-    public async Task<LoginResponse?> LoginAsync(LoginRequest request)
+    public async Task<LoginResponse> LoginAsync(LoginRequest request)
 {
     var usuario = await _context.Usuarios
         .Include(u => u.Tenant)
@@ -28,7 +29,11 @@ public class AuthService : IAuthService
 
     if (usuario is null || !usuario.Activo)
     {
-        return null;
+        throw new BusinessException(
+            StatusCodes.Status401Unauthorized,
+            "NO_AUTENTICADO",
+            "No autenticado",
+            "Las credenciales son incorrectas.");
     }
 
     var passwordHasher = new PasswordHasher<Usuario>();
@@ -40,7 +45,11 @@ public class AuthService : IAuthService
 
     if (resultado == PasswordVerificationResult.Failed)
     {
-        return null;
+        throw new BusinessException(
+            StatusCodes.Status401Unauthorized,
+            "NO_AUTENTICADO",
+            "No autenticado",
+            "Las credenciales son incorrectas.");
     }
 
     var token = _jwt.GenerateToken(usuario);

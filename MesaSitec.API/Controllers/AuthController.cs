@@ -20,14 +20,6 @@ public class AuthController : ControllerBase
     {
         var response = await _authService.LoginAsync(request);
 
-        if (response is null)
-        {
-            return Unauthorized(new
-            {
-                message = "Credenciales inválidas."
-            });
-        }
-
         return Ok(response);
     }
 }
