@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MesaSitec.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a4ad88fe129c1dc1f9d5bcd5c4adf60696b83e7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c55e37141f53c78a8f0c6c5d8e711e63e95761b")]
 [assembly: System.Reflection.AssemblyProductAttribute("MesaSitec.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MesaSitec.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

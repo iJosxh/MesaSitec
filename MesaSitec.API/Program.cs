@@ -21,6 +21,17 @@ if (string.IsNullOrWhiteSpace(jwtSecret))
         "La variable de entorno JWT_SECRET no está configurada.");
 }
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services
     .AddControllers()
     .AddJsonOptions(options =>
@@ -167,6 +178,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
+
+app.UseCors("Frontend");
 
 app.UseAuthentication();
 
